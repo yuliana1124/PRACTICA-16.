@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video de YouTube en pantalla completa</title>
+    <style>
+        /* Asegurar que el iframe ocupe toda la pantalla */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            transition: opacity 1s ease; /* Desvanecer el cuerpo con una transición de 1 segundo */
+        }
+
+        iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Estilo para la animación de desvanecimiento */
+        .fade-out {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="player"></div>
+
+    <script>
+        // Cargar la API de YouTube
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        // Crear el reproductor de YouTube
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                videoId: 'XWx8XENCygc',  // ID del nuevo video
+                playerVars: {
+                    autoplay: 1,  // Reproducción automática
+                    mute: 1,      // Volumen silenciado al principio para evitar bloqueos de autoplay
+                    controls: 0,  // Sin controles de reproducción
+                    rel: 0,       // No mostrar videos relacionados al final
+                    showinfo: 0   // No mostrar información del video
+                },
+                events: {
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        // Detectar el estado del reproductor y redirigir cuando el video termine
+        function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.PLAYING) {
+                // Redirigir después de 7 segundos de reproducción
+                setTimeout(function() {
+                    player.stopVideo(); // Detener el video
+                    // Aplicar la clase fade-out al body para desvanecer la página
+                    document.body.classList.add('fade-out');
+                    
+                    // Redirigir después de que se haya completado la animación de desvanecimiento (1 segundo)
+                    setTimeout(function() {
+                        window.location.href = "https://yuliana1124.github.io/practica-15/";
+                    }, 1000); // 1000 milisegundos (1 segundo)
+                }, 7000); // 7000 milisegundos (7 segundos)
+            }
+        }
+    </script>
+</body>
+</html>
